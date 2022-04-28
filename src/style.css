@@ -1,0 +1,23 @@
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+#root {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#mySvg {
+    margin: auto;
+}
+
+button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 180px;
+    height: 30px;
+}
