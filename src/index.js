@@ -35,6 +35,21 @@ var button = d3.select("#root")
       .text("Add value!")
       
 
+/* var button2 = d3.select("#root")
+      .append("button")
+      .text("Shuffle!")
+
+
+d3.select("button")
+  .on("click", () => {
+      dataset.forEach((datum)=> {
+        var maxValue = 25;
+        var newNumber = Math.floor(Math.random() * maxValue);	
+
+        datum = newNumber;
+      })
+}) */
+
 //Create rectangles
 svg.selectAll("rect")
   .data(dataset)
