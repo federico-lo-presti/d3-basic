@@ -16,22 +16,31 @@ let dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
 
 const maxValue = 50;
 
+const margin = { top: 20, right: 20, bottom: 20, left: 40 }
+
 
 
 const xScale = d3.scaleBand()
       .domain(d3.range(dataset.length))
-      .rangeRound([0, svgWidth])
+      .rangeRound([0, svgWidth - margin.left - margin.right])
       .paddingInner(0.05);
 
 const yScale = d3.scaleLinear()
       .domain([0, d3.max(dataset)])
-      .range([0, svgHeight]);
+      .range([0, svgHeight - margin.top - margin.bottom])
 
 const mainSvg = d3.select("#root")
       .append("svg")
       .attr("id", "mainSvg")
       .attr("width", svgWidth)
-      .attr("height", svgHeight);
+      .attr("height", svgHeight)
+      
+const innerGraph = mainSvg.append("g")
+      .attr("id", "innerGroup")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .attr("width", svgWidth - margin.left - margin.right)
+      .attr("height", svgHeight - margin.top - margin.bottom)
+
 const addRandomValue = d3.select("#root")
       .append("button")
       .attr("id", "addRandomValue")
@@ -42,12 +51,19 @@ const randomizeButton = d3.select("#root")
       .attr("id", "randomizeButton")
       .text("Shuffle!")
 
+const yAxis = d3.axisLeft().scale(yScale);
+
+const yAxisGroup = mainSvg.append("g")
+      .attr("transform", `translate(${margin.left - 20}, ${margin.top})`)
+      .attr("height", svgHeight - margin.top - margin.bottom)
+      .call(yAxis);
+
 
 
 const createBarsAndLabels = () => {
 
     //Create rectangles
-    mainSvg.selectAll("rect")
+    innerGraph.selectAll("rect")
     .data(dataset)
     .join("rect")
     .transition()
@@ -56,7 +72,7 @@ const createBarsAndLabels = () => {
       return xScale(i);
     })
     .attr("y", (d) => {
-      return svgHeight - yScale(d);
+      return svgHeight - yScale(d) - margin.bottom;
     })
     .attr("width", xScale.bandwidth())
     .attr("height", (d) => {
@@ -66,11 +82,12 @@ const createBarsAndLabels = () => {
       return "rgb(0, 0, " + Math.round(d * 5) + ")";
     });
 
+    
     //Create labels
-    mainSvg.selectAll("text")
+    innerGraph.selectAll("text")
     .data(dataset)
     .join("text")
-    .transition()							
+    .transition()						
     .duration(500)
     .text((d) => {
       return d;
@@ -80,11 +97,18 @@ const createBarsAndLabels = () => {
       return xScale(i) + xScale.bandwidth() / 2;
     })
     .attr("y", (d) => {
-      return svgHeight - yScale(d) + 14;
+      return svgHeight - yScale(d) - margin.bottom + 14;
     })
     .attr("font-family", "arial")
     .attr("font-size", "12px")
     .attr("fill", "white");
+
+
+    yScale.domain([d3.max(dataset), 0]);
+
+    yAxisGroup.transition()
+    .duration(500)
+    .call(yAxis);
 }
 
 
@@ -118,7 +142,7 @@ d3.select("#randomizeButton")
     yScale.domain([0, d3.max(dataset)]);	
     createBarsAndLabels();
   })
-
+  
 
 createBarsAndLabels();
 
