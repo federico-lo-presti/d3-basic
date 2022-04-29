@@ -43,13 +43,13 @@ const addRandomValue = d3
   .select('#root')
   .append('button')
   .attr('id', 'addRandomValue')
-  .text('Add value!')
+  .text('Add value')
 
 const randomizeButton = d3
   .select('#root')
   .append('button')
   .attr('id', 'randomizeButton')
-  .text('Shuffle!')
+  .text('Randomize')
 
 const yAxis = d3.axisLeft().scale(yScale)
 
@@ -65,9 +65,18 @@ const createBarsAndLabels = () => {
     .selectAll('rect')
     .data(dataset)
     .join('rect')
+    .on('mouseover', function () {
+      d3.select(this).attr('fill', 'orange')
+    })
+    .on('mouseout', function (_, i) {
+      d3.select(this)
+        .transition()
+        .duration(250)
+        .attr('fill', `rgb(0, 0, ${Math.round(i * 5)})`)
+    })
     .transition()
     .duration(500)
-    .attr('x', (d, i) => {
+    .attr('x', (_, i) => {
       return xScale(i)
     })
     .attr('y', (d) => {
@@ -78,7 +87,7 @@ const createBarsAndLabels = () => {
       return yScale(d)
     })
     .attr('fill', (d) => {
-      return 'rgb(0, 0, ' + Math.round(d * 5) + ')'
+      return `rgb(0, 0, ${Math.round(d * 5)})`
     })
 
   //Create labels
@@ -92,7 +101,7 @@ const createBarsAndLabels = () => {
       return d
     })
     .attr('text-anchor', 'middle')
-    .attr('x', (d, i) => {
+    .attr('x', (_, i) => {
       return xScale(i) + xScale.bandwidth() / 2
     })
     .attr('y', (d) => {
