@@ -1,4 +1,4 @@
-# Test8
+# D3 Basic Bar Chart 
 
 This project was bootstrapped with [Accurapp](https://github.com/accurat/accurapp).
 
